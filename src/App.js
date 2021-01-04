@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { Table, Spin, Button } from "antd";
+import { connect } from "react-redux";
+import dataActions from "./redux/data/actions";
+import "antd/dist/antd.css";
 
-function App() {
+const App = (props) => {
+  // useEffect(() => {
+  //   fetchData();
+  // },[]);
+  const { datalist, isFetchingData, fetchData } = props;
+  const columns = [
+    { title: "Postcode", dataIndex: "postcode" },
+    { title: "New Cases", dataIndex: "new" },
+    { title: "Active Cases", dataIndex: "active" },
+    { title: "Total Cases", dataIndex: "total" },
+    { title: "Population", dataIndex: "population" },
+  ];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Button onClick={fetchData()}>SHOW</Button>
+      <Spin spinning={isFetchingData}>
+        <Table dataSource={datalist} columns={columns} />
+      </Spin>
+    </>
   );
-}
-
-export default App;
+};
+const { fetchData } = dataActions;
+export default connect(
+  (state) => {
+    const { datalist, isFetchingData } = state.dataReducer;
+    return { datalist, isFetchingData };
+  },
+  { fetchData }
+)(App);
