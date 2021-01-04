@@ -4,10 +4,13 @@ import { connect } from "react-redux";
 import dataActions from "./redux/data/actions";
 import "antd/dist/antd.css";
 
+import { getData } from "./apis/dataApi";
+
 const App = (props) => {
   // useEffect(() => {
   //   fetchData();
   // },[]);
+
   const { datalist, isFetchingData, fetchData } = props;
   const columns = [
     { title: "Postcode", dataIndex: "postcode" },
@@ -18,7 +21,7 @@ const App = (props) => {
   ];
   return (
     <>
-      <Button onClick={fetchData()}>SHOW</Button>
+      <Button onClick={() => getData()}>SHOW</Button>
       <Spin spinning={isFetchingData}>
         <Table dataSource={datalist} columns={columns} />
       </Spin>

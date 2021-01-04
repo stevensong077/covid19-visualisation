@@ -3,6 +3,7 @@ export async function getData() {
   try {
     const result = await axios.get("http://192.168.0.125:3000/all");
     if (result.status === 200) {
+        console.log(11111);
       return {
         success: true,
         data: result.data,
