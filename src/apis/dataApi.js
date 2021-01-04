@@ -1,9 +1,10 @@
 import axios from "axios";
 export async function getData() {
   try {
+    console.log(11111);
     const result = await axios.get("http://192.168.0.125:3000/all");
+    console.log(22222);
     if (result.status === 200) {
-        console.log(11111);
       return {
         success: true,
         data: result.data,
