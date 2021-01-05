@@ -17,20 +17,9 @@ import { SearchOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import dataActions from "./redux/data/actions";
 import "antd/dist/antd.css";
-// import echarts from "echarts/lib/echarts";
-// import "echarts/lib/chart/pie";
-// import "echarts/lib/component/tooltip";
-// import "echarts/lib/component/title";
-// import "echarts/lib/component/legend";
-// import "echarts/lib/component/markPoint";
-// import ReactEcharts from "echarts-for-react";
+import Pie from "./container/pie";
 
 const { Text } = Typography;
-
-// const pieNew = (props) => {
-//   const { data } = props;
-
-// };
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
@@ -225,6 +214,7 @@ const App = (props) => {
             </Card>
           </Col>
         </Row>
+        {/* <Pie data={datalist} /> */}
         <Table
           dataSource={datalist}
           columns={columns}
