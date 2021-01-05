@@ -1,4 +1,5 @@
 import actions from "./actions";
+
 const initState = {
   datalist: [],
   isFetchingData: false,
