@@ -4,12 +4,12 @@ import actions from "./actions";
 import { toast } from "react-toastify";
 
 function* getDataList() {
-  const { success, data, error, testJSON } = yield getData();
+  const { success, data, error } = yield getData();
   if (success) {
     yield put({ type: actions.GET_DATA_SUCCESS, payload: data });
   } else {
     yield put({ type: actions.GET_DATA_FAIL });
-    toast.error(error.message, { autoClose: 4000 });
+    toast.error(error.message, { autoClose: 3000 });
   }
 }
 

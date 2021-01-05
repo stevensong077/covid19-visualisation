@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Spin, Button } from "antd";
 import { connect } from "react-redux";
 import dataActions from "./redux/data/actions";
@@ -9,7 +9,8 @@ import { getData } from "./apis/dataApi";
 const App = (props) => {
   // useEffect(() => {
   //   fetchData();
-  // },[]);
+  // });
+  const [dataset,setDataset] = useState([])
 
   const { datalist, isFetchingData, fetchData } = props;
   const columns = [
@@ -19,11 +20,16 @@ const App = (props) => {
     { title: "Total Cases", dataIndex: "total" },
     { title: "Population", dataIndex: "population" },
   ];
+
+  const generateDataset = async ()=>{
+    const result = await getData();
+    setDataset(result.data)
+  }
   return (
     <>
-      <Button onClick={() => getData()}>SHOW</Button>
+      <Button onClick={() => generateDataset()}>Fetch</Button>
       <Spin spinning={isFetchingData}>
-        <Table dataSource={datalist} columns={columns} />
+        <Table dataSource={dataset} columns={columns} />
       </Spin>
     </>
   );
