@@ -23,9 +23,16 @@ const { Text } = Typography;
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
-
+  const getEnv = () => {
+    if (process.env.NODE_ENV === "development") {
+      alert("development");
+    } else {
+      alert("production");
+    }
+  };
   useEffect(() => {
     fetchData();
+    getEnv();
   }, [fetchData]);
 
   useEffect(() => {

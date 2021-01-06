@@ -66,5 +66,4 @@ const Pie = (props) => {
   );
 };
 
-
 export default Pie
