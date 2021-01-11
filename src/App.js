@@ -17,22 +17,23 @@ import { SearchOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import dataActions from "./redux/data/actions";
 import "antd/dist/antd.css";
-import Pie from "./container/pie";
+import BarChart from "./container/newCases";
+import BarActive from "./container/activeCases";
 
 const { Text } = Typography;
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
-  const getEnv = () => {
-    if (process.env.NODE_ENV === "development") {
-      alert("development");
-    } else {
-      alert("production");
-    }
-  };
+  // const getEnv = () => {
+  //   if (process.env.NODE_ENV === "development") {
+  //     alert("development");
+  //   } else {
+  //     alert("production");
+  //   }
+  // };
   useEffect(() => {
     fetchData();
-    getEnv();
+    // getEnv();
   }, [fetchData]);
 
   useEffect(() => {
@@ -45,7 +46,6 @@ const App = (props) => {
   const [totalActive, setTotalActive] = useState(0);
   const [totalCases, setTotalCases] = useState(0);
   const [dataDate, setDataDate] = useState("");
-  // const [test, setTest] = useState(0);
   let searchInput = "";
   const calculate = () => {
     let newCases = 0;
@@ -221,7 +221,14 @@ const App = (props) => {
             </Card>
           </Col>
         </Row>
-        {/* <Pie data={datalist} /> */}
+        <Row style={{ padding: "0 200px 40px" }}>
+          <Col span={12}>
+            <BarChart data={datalist} />
+          </Col>
+          <Col span={12}>
+            <BarActive data={datalist} />
+          </Col>
+        </Row>
         <Table
           dataSource={datalist}
           columns={columns}
