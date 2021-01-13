@@ -197,7 +197,7 @@ const App = (props) => {
       <Result
         icon={<></>}
         title="Covid-19 in Victoria"
-        subTitle={`View Covid-19 information of latest day.  Data date: ${dataDate}`}
+        subTitle={`Covid-19 information of the past 24 hours statwide.  Data date: ${dataDate}`}
       />
       <Spin spinning={isFetchingData}>
         <Row gutter={16} style={{ padding: "0 300px 40px" }}>
