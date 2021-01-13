@@ -17,10 +17,13 @@ import { SearchOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 import dataActions from "./redux/data/actions";
 import "antd/dist/antd.css";
-import BarChart from "./container/newCases";
+import BarNew from "./container/newCases";
 import BarActive from "./container/activeCases";
+import Map from "./container/map";
+import { mapKey } from "./config/index";
+import { getlocation } from "./apis/dataApi";
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
@@ -31,22 +34,7 @@ const App = (props) => {
   //     alert("production");
   //   }
   // };
-  useEffect(() => {
-    fetchData();
-    // getEnv();
-  }, [fetchData]);
 
-  useEffect(() => {
-    calculate();
-  });
-
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const [totalNew, setTotalNew] = useState(0);
-  const [totalActive, setTotalActive] = useState(0);
-  const [totalCases, setTotalCases] = useState(0);
-  const [dataDate, setDataDate] = useState("");
-  let searchInput = "";
   const calculate = () => {
     let newCases = 0;
     let activeCases = 0;
@@ -62,6 +50,39 @@ const App = (props) => {
     setTotalNew(newCases);
     setTotalActive(activeCases);
     setTotalCases(total);
+  };
+
+  useEffect(() => {
+    fetchData();
+    // getEnv();
+  }, []);
+
+  useEffect(() => {
+    getActiveDataset();
+    calculate();
+  }, [datalist]);
+
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [totalNew, setTotalNew] = useState(0);
+  const [totalActive, setTotalActive] = useState(0);
+  const [totalCases, setTotalCases] = useState(0);
+  const [dataDate, setDataDate] = useState("");
+  const [activeDataset, setActiveDataset] = useState([]);
+  let searchInput = "";
+
+  const getActiveDataset = async () => {
+    let newArray = [];
+    for (let i = 0; i < datalist.length; i++) {
+      if (datalist[i].active !== 0) {
+        newArray.push({
+          post: JSON.stringify(datalist[i].postcode),
+          suburbs: (await getlocation(datalist[i].postcode)).data,
+          cases: parseInt(datalist[i].active),
+        });
+      }
+    }
+    setActiveDataset(newArray);
   };
 
   const getColumnSearchProps = (dataIndex) => ({
@@ -147,11 +168,13 @@ const App = (props) => {
     {
       title: "Postcode",
       dataIndex: "postcode",
+      key: "postcode",
       ...getColumnSearchProps("postcode"),
     },
     {
       title: "New Cases",
       dataIndex: "new",
+      key: "new",
       sorter: { compare: (a, b) => a.new - b.new },
       render: (data) => (
         <Text type={parseInt(data) !== 0 ? "danger" : "success"}>{data}</Text>
@@ -160,6 +183,7 @@ const App = (props) => {
     {
       title: "Active Cases",
       dataIndex: "active",
+      key: "active",
       sorter: { compare: (a, b) => a.active - b.active },
       render: (data) => (
         <Text type={parseInt(data) !== 0 ? "danger" : "success"}>{data}</Text>
@@ -168,6 +192,7 @@ const App = (props) => {
     {
       title: "Total Cases",
       dataIndex: "cases",
+      key: "cases",
       sorter: { compare: (a, b) => a.cases - b.cases },
       render: (data) => (
         <Text type={parseInt(data) !== 0 ? "danger" : "success"}>{data}</Text>
@@ -181,10 +206,8 @@ const App = (props) => {
       <Result
         icon={<></>}
         title="Covid-19 in Victoria"
-        subTitle={`Data date: ${dataDate}`}
-        // extra={<Button onClick={calculate}>Fetch Data</Button>}
+        subTitle={`View Covid-19 information of latest day.  Data date: ${dataDate}`}
       />
-      ,
       <Spin spinning={isFetchingData}>
         <Row gutter={16} style={{ padding: "0 300px 40px" }}>
           <Col span={8}>
@@ -223,7 +246,7 @@ const App = (props) => {
         </Row>
         <Row style={{ padding: "0 200px 40px" }}>
           <Col span={12}>
-            <BarChart data={datalist} />
+            <BarNew data={datalist} />
           </Col>
           <Col span={12}>
             <BarActive data={datalist} />
@@ -235,7 +258,19 @@ const App = (props) => {
           style={{ padding: "0  200px" }}
           title={() => "Search by postcode, sort by cases"}
           bordered={true}
+          rowKey={(record) => record.postcode}
         />
+        <Card bordered={false} style={{ padding: "20px 100px" }}>
+          <Title level={4}>Active cases distribution</Title>
+          <Map
+            isMarkerShown
+            googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${mapKey}&v=3.exp&libraries=geometry,drawing,places`}
+            loadingElement={<div style={{ height: `80vh` }} />}
+            containerElement={<div style={{ height: `100vh` }} />}
+            mapElement={<div style={{ height: `90vh` }} />}
+            dataset={activeDataset}
+          />
+        </Card>
       </Spin>
     </>
   );

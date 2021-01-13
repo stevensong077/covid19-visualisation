@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Chart, Interval, Coordinate, Axis, getTheme } from "bizcharts";
-import { Typography } from "antd";
+import { Typography, Table, Card } from "antd";
 const { Title } = Typography;
 
-const Bar = (props) => {
+const BarNew = (props) => {
   const { data } = props;
   const [dataArray, setDataArray] = useState([]);
 
   const getArray = () => {
-
     let newArray = [];
     for (let i = 0; i < data.length; i++) {
       if (data[i].new !== 0) {
@@ -23,11 +22,31 @@ const Bar = (props) => {
 
   useEffect(() => {
     getArray();
-  });
+  }, [dataArray]);
+
+  const columns = [
+    {
+      title: "Postcode",
+      dataIndex: "post",
+      key: "postcode",
+    },
+    {
+      title: "New Cases",
+      dataIndex: "cases",
+      key: "new",
+      // sorter: { compare: (a, b) => a.new - b.new },
+    },
+  ];
 
   return (
-    <>
-      <Title level={4}>New cases distribution</Title>
+    <Card bordered={false} style={{ padding: "0 80px" }}>
+      <Title level={4}>New cases</Title>
+      <Table
+        dataSource={dataArray}
+        columns={columns}
+        rowKey={(record) => record.postcode}
+        style={{padding:"20px 0 80px" }}
+      ></Table>
       <Chart height={320} width={600} autoFit data={dataArray}>
         <Interval position="post*cases" color="post" />
       </Chart>
@@ -62,8 +81,8 @@ const Bar = (props) => {
           }}
         />
       </Chart> */}
-    </>
+    </Card>
   );
 };
 
-export default Bar;
+export default BarNew;

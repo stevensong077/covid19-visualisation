@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Chart, Interval, Coordinate, Axis, getTheme } from "bizcharts";
-import { Typography } from "antd";
+import { Typography, Card } from "antd";
 const { Title } = Typography;
 
 const BarActive = (props) => {
   const { data } = props;
   const [dataArray, setDataArray] = useState([]);
   const [percentageArray, setPercentageArray] = useState([]);
+
   const getArray = () => {
     let total = 0;
     for (let i = 0; i < data.length; i++) {
@@ -32,16 +33,17 @@ const BarActive = (props) => {
         newArray.push({
           post: JSON.stringify(data[i].postcode),
           cases: parseInt(data[i].active),
-          percentage: parseInt(data[i].active) / total,
+          percentage: parseFloat(data[i].active / total).toFixed(4),
         });
       }
     }
-    setDataArray(newArray);
+    return newArray;
   };
 
   useEffect(() => {
-    getArray();
-  });
+    let result = getArray();
+    setDataArray(result);
+  }, [dataArray]);
 
   const cols = {
     percentage: {
@@ -53,12 +55,19 @@ const BarActive = (props) => {
   };
 
   return (
-    <>
-      {" "}
-      <Title level={4}>Active cases distribution</Title>
-      <Chart height={320} width={600} autoFit data={dataArray}>
-        <Interval position="post*cases" />
-      </Chart>
+    <Card bordered={false} style={{ padding: "0, 50px" }}>
+      <Title level={4}>Active cases</Title>
+      <Card bordered={false} style={{ padding: "20px 0 40px" }}>
+        <Chart
+          height={320}
+          width={600}
+          autoFit
+          data={dataArray}
+          style={{ padding: "50px 0" }}
+        >
+          <Interval position="post*cases" color="post" />
+        </Chart>
+      </Card>
       <Chart height={320} width={600} scale={cols} autoFit data={dataArray}>
         <Coordinate type="theta" radius={0.75} />
         <Axis visible={false} />
@@ -90,7 +99,7 @@ const BarActive = (props) => {
           }}
         />
       </Chart>
-    </>
+    </Card>
   );
 };
 
