@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Chart, Interval, Coordinate, Axis, getTheme } from "bizcharts";
+import { Chart, Interval, Coordinate, Axis, getTheme, Legend } from "bizcharts";
 import { Typography, Card } from "antd";
 const { Title } = Typography;
 
@@ -14,26 +14,28 @@ const BarActive = (props) => {
       if (data[i].active !== 0) {
         total += parseInt(data[i].active);
       }
-      // let percent = [];
+
+      // let percentArray = [];
       // if (data[i].postcode === 9998) {
-      //   percent.push({
+      //   percentArray.push({
       //     area: "cases acquired overseas",
       //     percents: parseInt(data[i].active) / total,
-      //   });
-      //   percent.push({
+      //   })
+      //   percentArray.push({
       //     area: "cases acquired locally",
       //     percents: 1 - parseInt(data[i].active) / total,
-      //   });
-      // }
-      // setPercentageArray(percent);
+      //   })
+      // } else if(data[i].postcode === 9999){}
+      // setPercentageArray(percentArray);
     }
+
     let newArray = [];
     for (let i = 0; i < data.length; i++) {
       if (data[i].active !== 0) {
         newArray.push({
           post: JSON.stringify(data[i].postcode),
           cases: parseInt(data[i].active),
-          percentage: parseFloat(data[i].active / total).toFixed(4),
+          percentage: parseFloat(data[i].active / total),
         });
       }
     }
@@ -43,7 +45,7 @@ const BarActive = (props) => {
   useEffect(() => {
     let result = getArray();
     setDataArray(result);
-  }, [dataArray]);
+  }, [data]);
 
   const cols = {
     percentage: {
@@ -58,13 +60,8 @@ const BarActive = (props) => {
     <Card bordered={false} style={{ padding: "0, 50px" }}>
       <Title level={4}>Active cases</Title>
       <Card bordered={false} style={{ padding: "20px 0 40px" }}>
-        <Chart
-          height={320}
-          width={600}
-          autoFit
-          data={dataArray}
-          style={{ padding: "50px 0" }}
-        >
+        <Chart height={320} width={600} autoFit data={dataArray}>
+          <Legend visible={false} />
           <Interval position="post*cases" color="post" />
         </Chart>
       </Card>
@@ -74,16 +71,17 @@ const BarActive = (props) => {
         <Interval
           position="percentage"
           color="post"
+          X
           adjust="stack"
           style={{
             lineWidth: 1,
             stroke: "#fff",
           }}
           label={[
-            "count",
+            "*",
             {
               content: (data) => {
-                return `${data.post}: ${data.percentage * 100}%`;
+                return `${data.post}: ${data.percentage.toFixed(4) * 100}%`;
               },
             },
           ]}

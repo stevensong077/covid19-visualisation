@@ -27,14 +27,6 @@ const { Text, Title } = Typography;
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
-  // const getEnv = () => {
-  //   if (process.env.NODE_ENV === "development") {
-  //     alert("development");
-  //   } else {
-  //     alert("production");
-  //   }
-  // };
-
   const calculate = () => {
     let newCases = 0;
     let activeCases = 0;
@@ -54,7 +46,6 @@ const App = (props) => {
 
   useEffect(() => {
     fetchData();
-    // getEnv();
   }, []);
 
   useEffect(() => {

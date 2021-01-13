@@ -17,12 +17,13 @@ const BarNew = (props) => {
         });
       }
     }
-    setDataArray(newArray);
+    return newArray;
   };
 
   useEffect(() => {
-    getArray();
-  }, [dataArray]);
+    const result = getArray();
+    setDataArray(result);
+  }, [data]);
 
   const columns = [
     {
@@ -34,7 +35,7 @@ const BarNew = (props) => {
       title: "New Cases",
       dataIndex: "cases",
       key: "new",
-      // sorter: { compare: (a, b) => a.new - b.new },
+      sorter: { compare: (a, b) => a.new - b.new },
     },
   ];
 
@@ -44,43 +45,12 @@ const BarNew = (props) => {
       <Table
         dataSource={dataArray}
         columns={columns}
-        rowKey={(record) => record.postcode}
-        style={{padding:"20px 0 80px" }}
+        rowKey={(record) => record.post}
+        style={{ padding: "20px 0 80px" }}
       ></Table>
       <Chart height={320} width={600} autoFit data={dataArray}>
-        <Interval position="post*cases" color="post" />
+        <Interval position="post*cases" color="post" size={80} />
       </Chart>
-      {/* <Chart height={320} width={600} autoFit data={dataArray}>
-        <Coordinate type="theta" radius={0.75} />
-        <Axis visible={false} />
-        <Interval
-          position="cases"
-          color="post"
-          adjust="stack"
-          style={{
-            lineWidth: 1,
-            stroke: "#fff",
-          }}
-          label={[
-            "*",
-            {
-              content: (data) => {
-                return `${data.post}: ${data.cases}`;
-              },
-            },
-          ]}
-          state={{
-            selected: {
-              style: (t) => {
-                const res = getTheme().geometries.interval.rect.selected.style(
-                  t
-                );
-                return { ...res, fill: "red" };
-              },
-            },
-          }}
-        />
-      </Chart> */}
     </Card>
   );
 };
