@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Typography,
+  Layout
 } from "antd";
 import Highlighter from "react-highlight-words";
 import { SearchOutlined } from "@ant-design/icons";
@@ -24,6 +25,7 @@ import { mapKey } from "./config/index";
 import { getlocation } from "./apis/dataApi";
 
 const { Text, Title } = Typography;
+const {Footer} = Layout
 
 const App = (props) => {
   const { datalist, isFetchingData, fetchData } = props;
@@ -194,12 +196,12 @@ const App = (props) => {
 
   return (
     <>
-      <Result
-        icon={<></>}
-        title="Covid-19 in Victoria"
-        subTitle={`Covid-19 information of the past 24 hours statwide.  Data date: ${dataDate}`}
-      />
       <Spin spinning={isFetchingData}>
+        <Result
+          icon={<></>}
+          title="Covid-19 in Victoria"
+          subTitle={`Covid-19 information of the past 24 hours statewide.  Data date: ${dataDate}`}
+        />
         <Row gutter={16} style={{ padding: "0 300px 40px" }}>
           <Col span={8}>
             <Card>
@@ -234,7 +236,12 @@ const App = (props) => {
               />
             </Card>
           </Col>
+          <Text type="secondary" style={{ padding: "30px 10px" }}>
+            Note: 9998 represent cases acquired overseas . 9999 represent cases
+            acquired interstate.
+          </Text>
         </Row>
+
         <Row style={{ padding: "0 200px 40px" }}>
           <Col span={12}>
             <BarNew data={datalist} />
@@ -247,21 +254,22 @@ const App = (props) => {
           dataSource={datalist}
           columns={columns}
           style={{ padding: "0  200px" }}
-          title={() => "Search by postcode, sort by cases"}
+          title={() => "Search by postcode; Sort by cases"}
           bordered={true}
           rowKey={(record) => record.postcode}
         />
-        <Card bordered={false} style={{ padding: "20px 100px" }}>
-          <Title level={4}>Active cases distribution</Title>
+        <Card bordered={false} style={{ padding: "20px 100px 0" }}>
+          <Title level={4}>Active Cases Distribution</Title>
           <Map
             isMarkerShown
             googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${mapKey}&v=3.exp&libraries=geometry,drawing,places`}
             loadingElement={<div style={{ height: `80vh` }} />}
             containerElement={<div style={{ height: `100vh` }} />}
-            mapElement={<div style={{ height: `90vh` }} />}
+            mapElement={<div style={{ height: `96vh` }} />}
             dataset={activeDataset}
           />
         </Card>
+        <Footer style={{ textAlign: 'center' }}> 2021 Created by Steven</Footer>
       </Spin>
     </>
   );

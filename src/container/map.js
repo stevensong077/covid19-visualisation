@@ -24,7 +24,6 @@ const MapWithAMakredInfoWindow = compose(
   withGoogleMap
 )((props) => {
   const { dataset } = props;
-  const [isInfoWindowOpen, setIsInfoWindowOpen] = useState(false);
   const [openId, setOpenedId] = useState("");
 
   const calculateLocation = (marker) => {
@@ -59,9 +58,9 @@ const MapWithAMakredInfoWindow = compose(
 
   return (
     <>
-      <Button onClick={() => dataset.map((marker) => console.log(marker))}>
+      {/* <Button onClick={() => dataset.map((marker) => console.log(marker))}>
         show
-      </Button>
+      </Button> */}
       <GoogleMap
         defaultZoom={11}
         defaultCenter={{ lat: -37.8136, lng: 144.9631 }}
